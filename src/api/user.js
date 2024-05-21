@@ -18,5 +18,9 @@ export const signin = (username, email, password) => {
       email: email,
       password: password,
     })
-    .then(response => response.data);
+    .then((response) => response.data);
+};
+
+export const getMe = () => {
+  return api.get("/user/").then((response) => response.data);
 };

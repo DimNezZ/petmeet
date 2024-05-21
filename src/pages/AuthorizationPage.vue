@@ -1,12 +1,11 @@
 <template>
-    <Header/>
-    <AuthorizationForm/>
-    <Footer/>
+  <Header />
+  <AuthorizationForm />
+  <Footer />
 </template>
 
 <script setup>
-import Header from '../components/blocks/Header.vue';
-import AuthorizationForm from '../components/forms/AuthorizationForm.vue'
-
-import Footer from '../components/blocks/Footer.vue';
+import Header from "../components/blocks/Header.vue";
+import AuthorizationForm from "../components/forms/AuthorizationForm.vue";
+import Footer from "../components/blocks/Footer.vue";
 </script>
