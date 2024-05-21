@@ -1,102 +1,108 @@
 <template>
-    <Container>
-        <div class="signin_form">
-            <div class="tabs">
-            </div>
-            <div class="form_greeting">Присоединяйтесь к нам</div>
-            <div class="column">
-                <div class="input_wrapper">
-                    <div class="input_caption">Имя</div>
-                    <input type="email" class="signin_input">
-                </div>
-                <div class="input_wrapper">
-                    <div class="input_caption">Фамилия</div>
-                    <input type="email" class="signin_input">
-                </div>
-            </div>
-            <div class="input_wrapper">
-                <div class="input_caption">Электронная почта</div>
-                <input type="email" class="signin_input">
-            </div>
-            <div class="input_wrapper">
-                <div class="input_caption">Пароль</div>
-                <input type="password" class="signin_input">
-            </div>
-            <Button class="signin_button">Зарегистрироваться</Button>
-        </div>
-    </Container>
+  <div class="signin_form">
+    <div class="form_greeting">Присоединяйтесь к нам</div>
+    <div class="signin_control">
+      <CustomInput
+        type="text"
+        name="login"
+        placeholder="Логин"
+        class="signin_input"
+        :value="formData.username"
+        @input="formData.username = $event.target.value"
+      />
+      <CustomError :errors="formErrors.username" />
+    </div>
+
+    <div class="signin_control">
+      <CustomInput
+        type="email"
+        name="email"
+        placeholder="Электронная почта"
+        class="signin_input"
+        :value="formData.email"
+        @input="formData.email = $event.target.value"
+      />
+      <CustomError :errors="formErrors.email" />
+    </div>
+    <div class="signin_control">
+      <CustomInput
+        type="password"
+        name="password"
+        placeholder="Пароль"
+        class="signin_input"
+        :value="formData.password"
+        @input="formData.password = $event.target.value"
+      />
+      <CustomError :errors="formErrors.password" />
+    </div>
+    <CustomButton @click="onSingInClick" class="signin_button"
+      >Зарегистрироваться</CustomButton
+    >
+  </div>
 </template>
 
 <script setup>
-import Container from '../Container.vue';
-import Button from '../Button.vue';
+import CustomInput from "../CustomInput.vue";
+import CustomButton from "../CustomButton.vue";
+import CustomError from "../CustomError.vue";
+import { reactive } from "vue";
+import { signin } from "../../api/user";
+
+const formData = reactive({
+  username: "",
+  email: "",
+  password: "",
+});
+
+const formErrors = reactive({
+  username: [],
+  email: [],
+  password: [],
+});
+
+function onSingInClick() {
+  signin(formData.username, formData.email, formData.password)
+    .then((arg) => {
+      emit("success");
+    })
+    .catch((arg) => {
+      const responseErrors = arg.response.data;
+      for (const key in formErrors) {
+        if (responseErrors[key]) {
+          formErrors[key] = responseErrors[key];
+        } else {
+          formErrors[key] = [];
+        }
+      }
+    });
+}
+
+const emit = defineEmits(["success"]);
 </script>
 
 <style scoped>
-.signin_form{
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 570px;
-    border: 1px solid black;
+.signin_form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 100%;
 }
-.input_wrapper{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.form_greeting {
+  margin: 10px 0;
+  font-size: 38px;
 }
-.column{
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
+.signin_control {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-
-.form_greeting{
-    margin: 10px 0;
-    font-size: 26px;
+.signin_input {
+  font-family: inherit;
 }
-.signin_input{
-    font-family: inherit;
-    font-size: 18px;
-    padding: 8px 6px;
-    border: 1px solid #80c3fd;
-    transition: 0.4s ease-in-out;
-}
-.signin_input:focus{
-    border-color: #77a42c;
-    outline: 0;
-}
-.input_caption{
-    text-align: start;
-    margin-bottom: 8px;
-}
-.signin_link{
-    margin: 10px 0;
-    text-align: end;
-
-}
-.signin_link > a{
-    color: #80c3fd;
-    transition: 0.4s;
-}
-.signin_link > a:hover{
-    color: #77a42c; 
-}
-.signin_button{
-    display: block;
-    margin: 15px auto 0 auto;
-    width: 100%;
-    background-color: #80c3fd;
-    color: #eeeef6;
-    font-size: 26px;
-    border: none;
-    transition: 0.4s;
-    outline: none;
-}
-.signin_button:hover{
-    background-color: #77a42c;
-}
-.login_button:active{
-    background-color: #678f26;
+.signin_button {
+  display: block;
+  margin: 0 auto;
+  width: 260px;
+  font-size: 22px;
 }
 </style>

@@ -1,13 +1,9 @@
 <script setup>
-import LogInForm from './components/forms/LogInForm.vue';
-import SignInForm from './components/forms/SignInForm.vue';
-// import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue';
 </script>
 
 <template>
-<LogInForm/>
-<SignInForm/>
+  <RouterView />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
