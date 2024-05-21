@@ -5,7 +5,7 @@
       <img src="../../assets/paw.svg" alt="" class="pets_icon" />
     </div>
     <div class="pets_wrapper">
-      <PetCard v-bind="pet" v-for="pet in pets" :key="pet.id" />
+      <PetCard v-bind="pet" v-for="pet in petsStore.pets" :key="pet.id" />
       <div class="pets_add">
         <img src="../../assets/plus.svg" alt="" class="add_icon" />
       </div>

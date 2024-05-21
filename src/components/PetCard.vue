@@ -1,7 +1,7 @@
 <template>
   <div class="petcard_wrapper">
     <div class="petcard_image_container">
-      <img :src="image" alt="" class="petcard_image" />
+      <img :src="photo" alt="" class="petcard_image" />
     </div>
     <div class="petcard_info">
       <div class="petcard_characteristics_column title">
@@ -19,7 +19,7 @@
         <div class="petcard_characteristics">{{ age }}</div>
       </div>
       <div class="petcard_status">Статус</div>
-      <div class="petcard_description">{{ status }}</div>
+      <div class="petcard_description">{{ description }}</div>
       <div class="button_container">
         <CustomButton @click="data.visibleView = true">Открыть</CustomButton>
         <CustomButton @click="data.visibleEditing = true" variant="secondary"
@@ -48,13 +48,13 @@ const data = reactive({ visibleView: false, visibleEditing: false });
 
 const props = defineProps({
   id: Number,
-  image: String,
+  photo: String,
   name: String,
   age: String,
   type: String,
   breed: String,
   sex: Boolean,
-  status: String,
+  description: String,
 });
 </script>
 

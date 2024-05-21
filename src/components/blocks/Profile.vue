@@ -12,7 +12,7 @@
 
           <div class="profile_characteristic">
             <img src="../../assets/pet.png" alt="" class="profile_icon" />
-            <div>Количество питомец</div>
+            <div>Количество питомцев: {{ pets.data.length }}</div>
           </div>
           <div class="profile_characteristic">
             <img src="../../assets/geo.png" alt="" class="profile_icon" />
@@ -41,10 +41,12 @@ import CustomButton from "../CustomButton.vue";
 import ProfileModal from "../ProfileModal.vue";
 import Pets from "../blocks/Pets.vue";
 import { useUserStore } from "../../store/useUserStore";
+import { usePetsStore } from "../../store/usePetsStore";
 
 const data = reactive({ visible: false });
 
 const user = useUserStore();
+const pets = usePetsStore();
 </script>
 
 <style scoped>
