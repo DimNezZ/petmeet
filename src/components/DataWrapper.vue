@@ -13,6 +13,5 @@ onMounted(() => {
   getMe().then((user) => {
     userStore.setUser(user);
   });
-  console.log("1");
 });
 </script>

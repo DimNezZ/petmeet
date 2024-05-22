@@ -27,15 +27,16 @@
 </template>
 
 <script setup>
-import CustomButton from "../CustomButton.vue";
-import CustomInput from "../CustomInput.vue";
-import CustomError from "../CustomError.vue";
-
 import { useRouter } from "vue-router";
 import { reactive } from "vue";
 import { login } from "../../api/user";
+import { useUserStore } from "../../store/useUserStore";
+import CustomButton from '../CustomButton.vue';
+import CustomError from '../CustomError.vue';
+import CustomInput from '../CustomInput.vue';
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const state = reactive({
   login: "",
@@ -49,18 +50,19 @@ const formErrors = reactive({
 
 function onLoginClick() {
   login(state.login, state.password).then((arg) => {
-    localStorage.setItem("token", arg.access);
+    userStore.setToken(arg.access);
+    userStore.fetchUser();
     router.push("/");
   }).catch((arg) => {
-        const responseErrors = arg.response.data
-      for (const key in formErrors) {
-        if (responseErrors[key]) {
-          formErrors[key] = responseErrors[key];
-        } else {
-          formErrors[key] = [];
-        }
+    const responseErrors = arg.response.data;
+    for (const key in formErrors) {
+      if (responseErrors[key]) {
+        formErrors[key] = responseErrors[key];
+      } else {
+        formErrors[key] = [];
       }
-    });
+    }
+  });
 }
 </script>
 

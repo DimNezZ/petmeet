@@ -6,7 +6,11 @@ import AuthorizationPage from "./pages/AuthorizationPage.vue";
 import { isAurhorized } from "./utils/user";
 
 const routes = [
-  { path: "/", component: MainPage },
+  { 
+    path: "/", 
+    component: MainPage, 
+    props: route => ({ petId: route.query.petId }) 
+  },
   { path: "/account", component: AccountPage },
   { path: "/auth", component: AuthorizationPage },
 ];

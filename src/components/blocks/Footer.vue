@@ -1,9 +1,9 @@
 <template>
-  <div class="footer">
+  <footer class="footer">
     <div class="wrapper">
       <Logo caption="©PetMeet" variant="footer" class="test" />
     </div>
-  </div>
+  </footer>
 </template>
 
 <script setup>

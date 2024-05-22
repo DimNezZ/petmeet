@@ -22,15 +22,9 @@ import Container from '../Container.vue';
 import LogInForm from './LogInForm.vue';
 import SignInForm from './SignInForm.vue';
 import CustomButton from '../CustomButton.vue';
-import { reactive, computed, ref } from 'vue'
+import { reactive } from 'vue';
 
-const data = reactive({form:"Вход"});
-
-
-
-// const required_form = computed(() => {
-
-// })
+const data = reactive({ form: "Вход" });
 </script>
 
 <style scoped>

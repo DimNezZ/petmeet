@@ -1,14 +1,9 @@
 <template>
-  <div class="form_input">
-    <label v-if="label" :for="name" class="input_label">{{ label }}</label>
-    <input class="input_text"
-      :type="type"
-      :name="name"
-      :id="id"
-      :placeholder="placeholder"
-      :value="modelValue"
-      @input="updateValue($event.target.value)"
-      v-bind="$attrs">
+  <div class="form_select">
+    <label v-if="label" :for="name" class="select_label">{{ label }}</label>
+    <select :name="name" :id="id" :value="modelValue" @change="updateValue($event.target.value)" v-bind="$attrs">
+      <option v-for="option in options" :key="option.value" :value="option.value">{{ option.text }}</option>
+    </select>
   </div>
 </template>
 
@@ -17,18 +12,10 @@ const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: {
-    type: [String, Number, Boolean],
+    type: [String, Number],
     default: ''
   },
   name: {
-    type: String,
-    default: ''
-  },
-  type: {
-    type: String,
-    default: 'text'
-  },
-  placeholder: {
     type: String,
     default: ''
   },
@@ -39,6 +26,10 @@ const props = defineProps({
   id: {
     type: String,
     default: ''
+  },
+  options: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -48,17 +39,17 @@ const updateValue = (value) => {
 </script>
 
 <style scoped>
-.form_input {
+.form_select {
   width: 100%;
   position: relative;
   margin-bottom: 20px;
 }
-.input_label {
+.select_label {
   font-size: 16px;
   display: block;
   margin-bottom: 8px;
 }
-.input_text {
+select {
   width: 100%;
   border-radius: 10px;
   border: 2px solid #77A42C;

@@ -5,75 +5,135 @@
       <img src="../../assets/paw.svg" alt="" class="pets_icon" />
     </div>
     <div class="pets_wrapper">
-      <PetCard v-bind="pet" v-for="pet in pets" :key="pet.id" />
-      <div class="pets_add">
+      <PetCard
+        v-for="pet in pets"
+        :key="pet.id"
+        :pet="pet"
+        :petTypes="petTypes"
+        :breeds="breeds"
+      />
+      <div class="pets_add" @click="openAddModal">
         <img src="../../assets/plus.svg" alt="" class="add_icon" />
       </div>
     </div>
   </Container>
+  <PetModal
+    :editing="true"
+    :open="addModalVisible"
+    @close="closeAddModal"
+    :pet="emptyPet"
+    :petTypes="petTypes"
+    :breeds="breeds"
+    @save="saveNewPet"
+  />
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import Container from "../Container.vue";
+import { useUserStore } from '../../store/useUserStore';
 import PetCard from "../PetCard.vue";
+import PetModal from "../PetModal.vue";
+import { getPets, getPetTypes, getBreeds, createPetProfile } from '../../api/pets.js';
 
-import dog from "../../assets/dog.jpg";
-import chinchilla from "../../assets/chinchilla.jpg";
-import cat from "../../assets/cat.jpg";
-import { usePetsStore } from "../../store/usePetsStore";
-import { getPets } from "../../api/pets.js";
-import { onMounted } from "vue";
+const userStore = useUserStore();
 
-const petsStore = usePetsStore();
+const pets = ref([]);
+const petTypes = ref([]);
+const breeds = ref([]);
+const addModalVisible = ref(false);
 
-onMounted(() => {
-  getPets().then((pets) => {
-    petsStore.setPets(pets);
-  });
+const emptyPet = ref({
+  id: null,
+  image: '',
+  name: '',
+  birthDate: '',
+  type: null,
+  breed: null,
+  sex: true,
+  status: '',
+  user: userStore.info ? userStore.info.pk : null
 });
 
-const pets = [
-  {
-    id: 1,
-    image: dog,
-    name: "Картошка",
-    age: "2 года",
-    type: "Cобака",
-    breed: "Корги",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 2,
-    image: chinchilla,
-    name: "Картошка",
-    age: "1 год",
-    type: "Шиншилла",
-    breed: "Обыкновенная",
-    sex: 0,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 3,
-    image: cat,
-    name: "Барсик",
-    age: "4 года",
-    type: "Кот",
-    breed: "Беспородный",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 4,
-    image: dog,
-    name: "Картошка",
-    age: "2 года",
-    type: "Cобака",
-    breed: "Корги",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-];
+const openAddModal = () => {
+  emptyPet.value.user = userStore.info ? userStore.info.pk : null;
+  addModalVisible.value = true;
+};
+
+const closeAddModal = () => {
+  addModalVisible.value = false;
+};
+
+const saveNewPet = async (newPet) => {
+  try {
+    const formData = new FormData();
+    formData.append('pet_name', newPet.name);
+    formData.append('pet_description', newPet.status);
+    formData.append('is_male', newPet.sex);
+    formData.append('birth_date', newPet.birthDate);
+
+    if (newPet.image instanceof File) {
+      formData.append('photo', newPet.image);
+    } else if (newPet.image) {
+      const response = await fetch(newPet.image);
+      const blob = await response.blob();
+      formData.append('photo', blob, 'photo.jpg');
+    }
+
+    formData.append('user', userStore.info.pk);
+    formData.append('pet_type', newPet.type);
+    formData.append('breed', newPet.breed);
+
+    const createdPet = await createPetProfile(formData);
+
+    pets.value.push({
+      id: createdPet.id,
+      image: createdPet.photo,
+      name: createdPet.pet_name,
+      birthDate: createdPet.birth_date,
+      type: createdPet.pet_type,
+      breed: createdPet.breed,
+      sex: createdPet.is_male,
+      status: createdPet.pet_description
+    });
+
+    closeAddModal();
+  } catch (error) {
+    console.error('Failed to save new pet:', error);
+  }
+};
+
+onMounted(async () => {
+  console.log('Pets component mounted');
+  if (!pets.value.length) { // Проверка на уже загруженные данные
+    console.log('Loading pets data');
+    try {
+      await userStore.fetchUser();
+
+      const [responsePetTypes, responseBreeds, responsePets] = await Promise.all([
+        getPetTypes(),
+        getBreeds(),
+        getPets()
+      ]);
+
+      petTypes.value = responsePetTypes;
+      breeds.value = responseBreeds;
+
+      pets.value = responsePets.map(pet => ({
+        id: pet.id,
+        image: pet.photo,
+        name: pet.pet_name,
+        birthDate: pet.birth_date,
+        type: pet.pet_type,
+        breed: pet.breed,
+        sex: pet.is_male,
+        status: pet.pet_description
+      }));
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    }
+  }
+});
 </script>
 
 <style scoped>

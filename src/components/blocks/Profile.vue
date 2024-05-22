@@ -23,19 +23,16 @@
             <div>{{ user.info?.phone_number }}</div>
           </div>
         </div>
-        <CustomButton @click="data.visible = true"
-          >Редактировать профиль</CustomButton
-        >
+        <CustomButton @click="openModal">Редактировать профиль</CustomButton>
       </div>
-      <!-- <img src="../../assets/mountain.png" alt="" class="mountain"> -->
     </Container>
   </div>
   <Pets />
-  <ProfileModal :open="data.visible" @close="data.visible = false" />
+  <ProfileModal :open="data.visible" @close="closeModal" :user="user.info" @save="updateUserInfo" />
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive } from "vue";
 import Container from "../Container.vue";
 import CustomButton from "../CustomButton.vue";
 import ProfileModal from "../ProfileModal.vue";
@@ -45,6 +42,19 @@ import { useUserStore } from "../../store/useUserStore";
 const data = reactive({ visible: false });
 
 const user = useUserStore();
+
+const openModal = () => {
+  data.visible = true;
+};
+
+const closeModal = () => {
+  data.visible = false;
+};
+
+const updateUserInfo = (updatedUser) => {
+  user.info = updatedUser;
+  data.visible = false;
+};
 </script>
 
 <style scoped>

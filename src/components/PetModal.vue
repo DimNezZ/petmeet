@@ -1,46 +1,72 @@
 <template>
-  <div
-    @click.self="emit('close')"
-    :class="{ petcard_visible: props.open }"
-    class="petcard_background"
-  >
+  <div v-if="open" @click.self="emit('close')" class="petcard_background">
     <div class="petcard_container">
       <div class="column">
         <div class="petcard_photo">
-          <img src="/profile-default.svg" alt="" />
+          <img :src="localPet.image || '/profile-default.svg'" alt="Pet photo" />
           <CustomButton variant="secondary">Добавить фото</CustomButton>
           <CustomButton variant="destructive">Удалить фото</CustomButton>
         </div>
         <div class="petcard_inputs">
-          <CustomInput name="name" label="Имя" />
-          <CustomInput name="type" label="Тип животного" />
-          <CustomInput name="breed " label="Порода" />
-          <CustomInput name="sex" label="Пол" />
-          <CustomInput name="age" type="date" label="Дата рождения" />
-          <CustomTextArea name="text" label="Описание" />
+          <CustomInput v-model="localPet.name" name="name" label="Имя" />
+          <CustomSelect v-model="localPet.type" name="type" label="Тип животного" :options="petTypeOptions" />
+          <CustomSelect v-model="localPet.breed" name="breed" label="Порода" :options="breedOptions" />
+          <CustomSelect v-model="localPet.sex" name="sex" :options="sexOptions" />
+          <CustomInput v-model="localPet.birthDate" name="birthDate" type="date" label="Дата рождения" />
+          <CustomTextArea v-model="localPet.status" name="text" label="Описание" />
         </div>
       </div>
-      <CustomButton v-if="props.editing">Сохранить</CustomButton>
+      <CustomButton v-if="editing" @click="savePet">Сохранить</CustomButton>
     </div>
   </div>
 </template>
 
 <script setup>
+import { reactive, watch, computed } from 'vue';
 import CustomButton from "./CustomButton.vue";
 import CustomInput from "./CustomInput.vue";
 import CustomTextArea from "./CustomTextArea.vue";
+import CustomSelect from "./CustomSelect.vue";
 
 const props = defineProps({
   open: Boolean,
   editing: Boolean,
+  pet: Object,
+  petTypes: Array,
+  breeds: Array
 });
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "save"]);
+
+const localPet = reactive({ ...props.pet });
+
+watch(() => props.open, (newOpen) => {
+  if (newOpen) {
+    Object.assign(localPet, props.pet); // Сбрасываем данные при открытии модального окна
+  }
+});
+
+const savePet = () => {
+  emit('save', { ...localPet });
+};
+
+const petTypeOptions = computed(() => {
+  return props.petTypes ? props.petTypes.map(type => ({ value: type.id, text: type.type_name })) : [];
+});
+
+const breedOptions = computed(() => {
+  return props.breeds ? props.breeds.map(breed => ({ value: breed.id, text: breed.breed_name })) : [];
+});
+
+const sexOptions = [
+  { value: true, text: 'Мужской' },
+  { value: false, text: 'Женский' }
+];
 </script>
 
 <style scoped>
 .petcard_background {
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
@@ -50,9 +76,6 @@ const emit = defineEmits(["close"]);
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
-}
-.petcard_visible {
-  display: flex;
 }
 .petcard_container {
   background-color: #f3f5f6;
