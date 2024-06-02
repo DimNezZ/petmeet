@@ -1,14 +1,10 @@
 <template>
   <div class="profile_wrapper">
     <Container class="profile">
-      <img
-        :src="user.info?.photo ?? '/profile-default.svg'"
-        alt=""
-        class="profile_image"
-      />
+      <img :src="user.photo" alt="" class="profile_image" />
       <div class="profile_data">
         <div class="profile_description">
-          <div class="profile_name">{{ user.info?.username }}</div>
+          <div class="profile_name">{{ user.name }}</div>
 
           <div class="profile_characteristic">
             <img src="../../assets/pet.png" alt="" class="profile_icon" />
@@ -23,11 +19,8 @@
             <div>{{ user.info?.phone_number }}</div>
           </div>
         </div>
-        <CustomButton @click="data.visible = true"
-          >Редактировать профиль</CustomButton
-        >
+        <CustomButton @click="data.visible = true">Редактировать профиль</CustomButton>
       </div>
-      <!-- <img src="../../assets/mountain.png" alt="" class="mountain"> -->
     </Container>
   </div>
   <Pets />
@@ -35,13 +28,13 @@
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
-import Container from "../Container.vue";
-import CustomButton from "../CustomButton.vue";
-import ProfileModal from "../ProfileModal.vue";
-import Pets from "../blocks/Pets.vue";
-import { useUserStore } from "../../store/useUserStore";
-import { usePetsStore } from "../../store/usePetsStore";
+import { reactive } from 'vue';
+import Container from '@/components/Container.vue';
+import CustomButton from '@/components/CustomButton.vue';
+import ProfileModal from '@/components/ProfileModal.vue';
+import Pets from '@/components/blocks/Pets.vue';
+import { useUserStore } from '@/store/useUserStore';
+import { usePetsStore } from '@/store/usePetsStore';
 
 const data = reactive({ visible: false });
 

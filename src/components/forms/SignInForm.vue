@@ -35,23 +35,21 @@
       />
       <CustomError :errors="formErrors.password" />
     </div>
-    <CustomButton @click="onSingInClick" class="signin_button"
-      >Зарегистрироваться</CustomButton
-    >
+    <CustomButton class="signin_button" @click="onSingInClick">Зарегистрироваться</CustomButton>
   </div>
 </template>
 
 <script setup>
-import CustomInput from "../CustomInput.vue";
-import CustomButton from "../CustomButton.vue";
-import CustomError from "../CustomError.vue";
-import { reactive } from "vue";
-import { signin } from "../../api/user";
+import CustomInput from '../CustomInput.vue';
+import CustomButton from '../CustomButton.vue';
+import CustomError from '../CustomError.vue';
+import { reactive } from 'vue';
+import { signUp } from '../../api/user';
 
 const formData = reactive({
-  username: "",
-  email: "",
-  password: "",
+  username: '',
+  email: '',
+  password: '',
 });
 
 const formErrors = reactive({
@@ -61,11 +59,11 @@ const formErrors = reactive({
 });
 
 function onSingInClick() {
-  signin(formData.username, formData.email, formData.password)
-    .then((arg) => {
-      emit("success");
+  signUp(formData.username, formData.email, formData.password)
+    .then(() => {
+      emit('success');
     })
-    .catch((arg) => {
+    .catch(arg => {
       const responseErrors = arg.response.data;
       for (const key in formErrors) {
         if (responseErrors[key]) {
@@ -77,7 +75,7 @@ function onSingInClick() {
     });
 }
 
-const emit = defineEmits(["success"]);
+const emit = defineEmits(['success']);
 </script>
 
 <style scoped>

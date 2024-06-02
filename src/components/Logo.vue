@@ -17,11 +17,11 @@
 const props = defineProps({
   caption: {
     type: String,
-    default: "",
+    default: '',
   },
   variant: {
     type: String,
-    default: "default",
+    default: 'default',
   },
 });
 </script>

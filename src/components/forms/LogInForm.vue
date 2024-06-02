@@ -3,43 +3,43 @@
     <div class="form_greeting">Добро пожаловать</div>
     <div class="login_control">
       <CustomInput
-      name="login"
-      placeholder="Логин"
-      :value="state.login"
-      @input="state.login = $event.target.value"
-    />
-    <CustomError :errors="formErrors.username"/>
+        name="login"
+        placeholder="Логин"
+        :value="state.login"
+        @input="state.login = $event.target.value"
+      />
+      <CustomError :errors="formErrors.username" />
     </div>
     <div class="login_control">
       <CustomInput
-      type="password"
-      name="password"
-      placeholder="Пароль"
-      :value="state.password"
-      @input="state.password = $event.target.value"
-    />
-    <CustomError :errors="formErrors.password"/>
-    </div>   
+        type="password"
+        name="password"
+        placeholder="Пароль"
+        :value="state.password"
+        @input="state.password = $event.target.value"
+      />
+      <CustomError :errors="formErrors.password" />
+    </div>
     <div class="login_link"><a href="">Забыли пароль?</a></div>
-    <CustomButton @click="onLoginClick" class="login_button"
-      >Войти</CustomButton>
+    <CustomButton class="login_button" @click="onLoginClick">Войти</CustomButton>
   </div>
 </template>
 
 <script setup>
-import CustomButton from "../CustomButton.vue";
-import CustomInput from "../CustomInput.vue";
-import CustomError from "../CustomError.vue";
+import CustomButton from '../CustomButton.vue';
+import CustomInput from '../CustomInput.vue';
+import CustomError from '../CustomError.vue';
 
-import { useRouter } from "vue-router";
-import { reactive } from "vue";
-import { login } from "../../api/user";
+import { useRouter } from 'vue-router';
+import { reactive } from 'vue';
+import { signIn } from '../../api/user';
+import { setAccessToken, setRefreshToken } from '@/utils/user';
 
 const router = useRouter();
 
 const state = reactive({
-  login: "",
-  password: "",
+  login: '',
+  password: '',
 });
 
 const formErrors = reactive({
@@ -48,11 +48,15 @@ const formErrors = reactive({
 });
 
 function onLoginClick() {
-  login(state.login, state.password).then((arg) => {
-    localStorage.setItem("token", arg.access);
-    router.push("/");
-  }).catch((arg) => {
-        const responseErrors = arg.response.data
+  signIn(state.login, state.password)
+    .then(response => {
+      setAccessToken(response.access);
+      setRefreshToken(response.refresh);
+
+      router.push('/');
+    })
+    .catch(error => {
+      const responseErrors = error.response.data;
       for (const key in formErrors) {
         if (responseErrors[key]) {
           formErrors[key] = responseErrors[key];
@@ -75,7 +79,7 @@ function onLoginClick() {
   margin: 10px 0;
   font-size: 38px;
 }
-.login_control{
+.login_control {
   display: flex;
   flex-direction: column;
   gap: 5px;

@@ -1,26 +1,13 @@
-import { api } from "./core.js";
+import { api } from './core.js';
 
-export const login = (login, password) => {
-  return api
-    .post("/token/", {
-      username: login,
-      password: password,
-    })
-    .then((response) => {
-      return response.data;
-    });
+export const signIn = (username, password) => {
+  return api.post('/token/', { username, password }).then(response => response.data);
 };
 
-export const signin = (username, email, password) => {
-  return api
-    .post("/register/", {
-      username: username,
-      email: email,
-      password: password,
-    })
-    .then((response) => response.data);
+export const signUp = (username, email, password) => {
+  return api.post('/register/', { username, email, password }).then(response => response.data);
 };
 
 export const getMe = () => {
-  return api.get("/user/").then((response) => response.data);
+  return api.get('/user/').then(response => response.data);
 };

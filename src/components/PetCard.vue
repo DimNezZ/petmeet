@@ -7,7 +7,7 @@
       <div class="petcard_characteristics_column title">
         <div class="petcard_characteristics">{{ name }}</div>
         <div class="petcard_characteristics">
-          <img v-if="sex" :src="male" alt="" class="maincard_pet_sex" />
+          <img v-if="sex === 'MALE'" :src="male" alt="" class="maincard_pet_sex" />
           <img v-else :src="female" alt="" class="maincard_pet_sex" />
         </div>
       </div>
@@ -21,30 +21,53 @@
       <div class="petcard_status">Статус</div>
       <div class="petcard_description">{{ description }}</div>
       <div class="button_container">
-        <CustomButton @click="data.visibleView = true">Открыть</CustomButton>
-        <CustomButton @click="data.visibleEditing = true" variant="secondary"
-          >Редактировать</CustomButton
-        >
+        <CustomButton @click="modalsState.visibleView = true">Открыть</CustomButton>
+        <CustomButton variant="secondary" @click="modalsState.visibleEditing = true">
+          Редактировать
+        </CustomButton>
       </div>
     </div>
   </div>
-  <PetModal :open="data.visibleView" @close="data.visibleView = false" />
+  <PetModal :pet="props" :open="modalsState.visibleView" @close="modalsState.visibleView = false" />
   <PetModal
+    :pet="props"
     :editing="true"
-    :open="data.visibleEditing"
-    @close="data.visibleEditing = false"
+    :open="modalsState.visibleEditing"
+    :on-edit="onEdit"
+    @close="modalsState.visibleEditing = false"
   />
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
-import CustomButton from "./CustomButton.vue";
-import PetModal from "./PetModal.vue";
+import { reactive } from 'vue';
+import PetModal from './PetModal.vue';
+import CustomButton from './CustomButton.vue';
 
-import male from "../assets/male.png";
-import female from "../assets/female.png";
+const petsStore = usePetsStore();
 
-const data = reactive({ visibleView: false, visibleEditing: false });
+const onEdit = data => {
+  return savePet(data.id, {
+    pet_name: data.name,
+    pet_description: data.description,
+    is_male: data.sex === 'MALE',
+    birth_date: data.birthDate,
+    photo: undefined,
+    pet_type: data.typeId,
+    breed: data.breedId,
+  }).then(pet => {
+    petsStore.updatePet(pet);
+  });
+};
+
+import male from '../assets/male.png';
+import female from '../assets/female.png';
+import { usePetsStore } from '@/store/usePetsStore';
+import { savePet } from '@/api/pets';
+
+const modalsState = reactive({
+  visibleView: false,
+  visibleEditing: false,
+});
 
 const props = defineProps({
   id: Number,
@@ -52,8 +75,11 @@ const props = defineProps({
   name: String,
   age: String,
   type: String,
+  typeId: Number,
   breed: String,
-  sex: Boolean,
+  breedId: Number,
+  birthDate: String,
+  sex: String,
   description: String,
 });
 </script>

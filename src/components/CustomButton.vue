@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["click"]);
+const emit = defineEmits(['click']);
 
 const props = defineProps({
   active: {
@@ -23,7 +23,7 @@ const props = defineProps({
   },
   variant: {
     type: String,
-    default: "primary",
+    default: 'primary',
   },
 });
 </script>

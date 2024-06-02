@@ -5,75 +5,58 @@
       <img src="../../assets/paw.svg" alt="" class="pets_icon" />
     </div>
     <div class="pets_wrapper">
-      <PetCard v-bind="pet" v-for="pet in petsStore.pets" :key="pet.id" />
-      <div class="pets_add">
+      <PetCard v-for="pet in petsStore.pets" v-bind="pet" :key="pet.id" />
+      <div class="pets_add" @click="modalsState.visibleEditing = true">
         <img src="../../assets/plus.svg" alt="" class="add_icon" />
       </div>
     </div>
   </Container>
+  <PetModal
+    :editing="true"
+    :open="modalsState.visibleEditing"
+    :on-edit="onAdd"
+    @close="modalsState.visibleEditing = false"
+  />
 </template>
 
 <script setup>
-import Container from "../Container.vue";
-import PetCard from "../PetCard.vue";
+import Container from '../Container.vue';
+import PetCard from '../PetCard.vue';
+import PetModal from '../PetModal.vue';
 
-import dog from "../../assets/dog.jpg";
-import chinchilla from "../../assets/chinchilla.jpg";
-import cat from "../../assets/cat.jpg";
-import { usePetsStore } from "../../store/usePetsStore";
-import { getPets } from "../../api/pets.js";
-import { onMounted } from "vue";
+import { usePetsStore } from '../../store/usePetsStore';
+import { useUserStore } from '@/store/useUserStore';
+import { addPet, getPets } from '../../api/pets.js';
+import { onMounted, reactive } from 'vue';
 
 const petsStore = usePetsStore();
+const userStore = useUserStore();
 
 onMounted(() => {
-  getPets().then((pets) => {
+  getPets().then(pets => {
     petsStore.setPets(pets);
   });
 });
 
-const pets = [
-  {
-    id: 1,
-    image: dog,
-    name: "Картошка",
-    age: "2 года",
-    type: "Cобака",
-    breed: "Корги",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 2,
-    image: chinchilla,
-    name: "Картошка",
-    age: "1 год",
-    type: "Шиншилла",
-    breed: "Обыкновенная",
-    sex: 0,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 3,
-    image: cat,
-    name: "Барсик",
-    age: "4 года",
-    type: "Кот",
-    breed: "Беспородный",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-  {
-    id: 4,
-    image: dog,
-    name: "Картошка",
-    age: "2 года",
-    type: "Cобака",
-    breed: "Корги",
-    sex: 1,
-    status: "Ищет для себя верных друзей потому, что не любит оставаться один",
-  },
-];
+const onAdd = data => {
+  return addPet({
+    pet_name: data.name,
+    pet_description: data.description,
+    is_male: data.sex === 'MALE',
+    birth_date: data.birthDate,
+    photo: undefined,
+    pet_type: data.typeId,
+    breed: data.breedId,
+    user: userStore.info.pk,
+  }).then(pet => {
+    petsStore.addPet(pet);
+  });
+};
+
+// eslint-disable-next-line no-unused-vars
+const modalsState = reactive({
+  visibleEditing: false,
+});
 </script>
 
 <style scoped>

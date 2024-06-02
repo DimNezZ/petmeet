@@ -1,17 +1,19 @@
 <template>
-  <div class="form_textarea">
-    <textarea
+  <div class="form_select">
+    <select
       :id="id"
       :name="name"
       :placeholder="placeholder"
       :value="value"
-      :maxlength="maxlength"
       :readonly="readonly"
-      class="textarea_text"
-      @input="emit('input', $event)"
+      class="select_text"
+      @change="emit('change', $event)"
     >
-    </textarea>
-    <label v-if="label" :for="id" class="textarea_label">{{ label }}</label>
+      <option v-for="option in options" :key="option.id" :value="option.id">
+        {{ renderOption(option) }}
+      </option>
+    </select>
+    <label v-if="label" :for="id" class="select_label">{{ label }}</label>
   </div>
 </template>
 
@@ -22,7 +24,7 @@ defineProps({
     default: undefined,
   },
   value: {
-    type: String,
+    type: [String, Number],
     default: '',
   },
   name: {
@@ -37,35 +39,37 @@ defineProps({
     type: String,
     default: '',
   },
-  maxlength: {
-    type: Number,
-    default: 90,
-  },
   readonly: {
     type: Boolean,
     default: false,
   },
+  options: {
+    type: Array,
+    default: () => [],
+  },
+  renderOption: {
+    type: Function,
+    default: value => value,
+  },
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits(['change']);
 </script>
 
 <style scoped>
-.form_textarea {
+.form_select {
   width: 100%;
   position: relative;
 }
-.textarea_text {
+.select_text {
   width: 100%;
   border-radius: 10px;
   border: 2px solid #77a42c;
   padding: 15px 20px;
   font-size: 26px;
   box-sizing: border-box;
-  resize: none;
-  min-height: 200px;
 }
-.textarea_label {
+.select_label {
   font-size: 16px;
   border-radius: 10px;
   border: 2px solid #77a42c;
@@ -76,7 +80,7 @@ const emit = defineEmits(['input']);
   top: 0;
   transform: translate(30px, -50%);
 }
-.textarea_text:focus {
+.input_text:focus {
   outline: 0;
 }
 </style>

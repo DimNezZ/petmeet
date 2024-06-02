@@ -7,8 +7,8 @@
 </template>
 
 <script setup>
-import Header from "../components/blocks/Header.vue";
-import MainPetCard from "../components/blocks/MainPetCard.vue";
-import Footer from "../components/blocks/Footer.vue";
-import DataWrapper from "../components/DataWrapper.vue";
+import Header from '../components/blocks/Header.vue';
+import MainPetCard from '../components/blocks/MainPetCard.vue';
+import Footer from '../components/blocks/Footer.vue';
+import DataWrapper from '../components/DataWrapper.vue';
 </script>
