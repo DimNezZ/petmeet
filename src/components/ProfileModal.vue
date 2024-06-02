@@ -7,7 +7,7 @@
     <div class="profilecard_container">
       <div class="column">
         <div class="profilecard_photo">
-          <img src="/profile-default.svg" alt="" />
+          <img src="/public/profile-default.svg" alt="" />
           <CustomButton variant="secondary">Добавить фото</CustomButton>
           <CustomButton variant="destructive">Удалить фото</CustomButton>
         </div>
