@@ -26,6 +26,7 @@
           Редактировать
         </CustomButton>
       </div>
+      <CustomButton @click="router.push(`/feed?pet=${id}`)"> Начать знакомство </CustomButton>
     </div>
   </div>
   <PetModal :pet="props" :open="modalsState.visibleView" @close="modalsState.visibleView = false" />
@@ -42,7 +43,13 @@
 import { reactive } from 'vue';
 import PetModal from './PetModal.vue';
 import CustomButton from './CustomButton.vue';
+import male from '../assets/male.png';
+import female from '../assets/female.png';
+import { usePetsStore } from '@/store/usePetsStore';
+import { savePet } from '@/api/pets';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const petsStore = usePetsStore();
 
 const onEdit = data => {
@@ -58,11 +65,6 @@ const onEdit = data => {
     petsStore.updatePet(pet);
   });
 };
-
-import male from '../assets/male.png';
-import female from '../assets/female.png';
-import { usePetsStore } from '@/store/usePetsStore';
-import { savePet } from '@/api/pets';
 
 const modalsState = reactive({
   visibleView: false,
@@ -140,7 +142,8 @@ const props = defineProps({
 }
 .button_container {
   display: flex;
-  gap: 40px;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: 20px;
 }
 </style>

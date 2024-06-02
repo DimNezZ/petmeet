@@ -1,6 +1,8 @@
 <template>
   <Header />
-  <AuthorizationForm />
+  <div>
+    <AuthorizationForm />
+  </div>
   <Footer />
 </template>
 

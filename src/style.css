@@ -55,6 +55,9 @@ button:focus-visible {
   margin: 0 auto;
   /* padding: 2rem; */
   text-align: center;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: max-content 1fr max-content;
 }
 
 @media (prefers-color-scheme: light) {

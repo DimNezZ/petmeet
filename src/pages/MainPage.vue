@@ -1,7 +1,9 @@
 <template>
   <DataWrapper>
     <Header />
-    <MainPetCard />
+    <div>
+      <MainPetCard />
+    </div>
     <Footer />
   </DataWrapper>
 </template>

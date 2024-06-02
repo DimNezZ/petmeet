@@ -1,7 +1,9 @@
 <template>
   <DataWrapper>
     <Header />
-    <Profile />
+    <div>
+      <Profile />
+    </div>
     <Footer />
   </DataWrapper>
 </template>

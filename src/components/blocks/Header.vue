@@ -1,7 +1,7 @@
 <template>
   <div class="header_wrapper">
     <div class="logo_container">
-      <RouterLink to="/">
+      <RouterLink to="/feed">
         <Logo caption="" variant="header" />
       </RouterLink>
     </div>
@@ -12,7 +12,7 @@
     </div>
     <div class="personal_account">
       <img class="account_image" :src="user.photo" alt="" />
-      <RouterLink to="/account" class="header_link">
+      <RouterLink to="/" class="header_link">
         <div class="account_name">{{ user.name }}</div>
       </RouterLink>
     </div>

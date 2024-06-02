@@ -6,8 +6,8 @@ import AuthorizationPage from '@/pages/AuthorizationPage.vue';
 import { isAuthorized } from '@/utils/user';
 
 const routes = [
-  { path: '/', component: MainPage },
-  { path: '/account', component: AccountPage },
+  { path: '/feed', component: MainPage },
+  { path: '/', component: AccountPage },
   { path: '/auth', component: AuthorizationPage },
 ];
 

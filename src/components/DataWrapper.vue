@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { getBreeds, getTypes } from '../api/pets';
+import { getBreeds, getPets, getTypes } from '../api/pets';
 import { getMe } from '../api/user';
 import { usePetsStore } from '../store/usePetsStore';
 import { useUserStore } from '../store/useUserStore';
@@ -21,6 +21,9 @@ onMounted(() => {
   });
   getTypes().then(types => {
     petsStore.setTypes(types);
+  });
+  getPets().then(pets => {
+    petsStore.setPets(pets);
   });
 });
 </script>

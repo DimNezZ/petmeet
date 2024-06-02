@@ -26,17 +26,11 @@ import PetModal from '../PetModal.vue';
 
 import { usePetsStore } from '../../store/usePetsStore';
 import { useUserStore } from '@/store/useUserStore';
-import { addPet, getPets } from '../../api/pets.js';
-import { onMounted, reactive } from 'vue';
+import { addPet } from '../../api/pets.js';
+import { reactive } from 'vue';
 
 const petsStore = usePetsStore();
 const userStore = useUserStore();
-
-onMounted(() => {
-  getPets().then(pets => {
-    petsStore.setPets(pets);
-  });
-});
 
 const onAdd = data => {
   return addPet({
